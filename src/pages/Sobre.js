@@ -1,4 +1,4 @@
-// src/pages/AboutPage.jsx
+// src/pages/Sobre.js
 import React from 'react';
 import { 
   Sparkles, 
@@ -94,6 +94,7 @@ function AboutPage() {
     <div className="about-page">
       {/* Hero Section */}
       <section className="hero-section">
+        <div className="hero-image-bg"></div>
         <div className="hero-content">
           <div className="hero-icon">
             <Sparkles size={48} />

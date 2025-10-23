@@ -7,6 +7,7 @@ import Modal from '../components/Common/Modal';
 import InviteCard from '../components/Invite/InviteCard';
 import InviteStats from '../components/Invite/InviteStats';
 import { generateStats } from '../services/inviteService';
+import { Sparkles, Plus } from 'lucide-react';
 import './HomePage.css';
 
 function HomePage() {
@@ -40,7 +41,10 @@ function HomePage() {
   return (
     <div className="home-page">
       <div className="home-header">
-        <h1>🎉 Meus Convites</h1>
+        <h1>
+          <Sparkles size={32} style={{ display: 'inline', marginRight: '0.5rem', verticalAlign: 'middle', color: '#d4af37' }} />
+          Meus Convites
+        </h1>
         <p>Gerencie seus convites digitais com QR Code</p>
       </div>
 
@@ -58,7 +62,8 @@ function HomePage() {
             onClick={() => navigate('/criar')}
             className="btn btn-primary"
           >
-            + Criar Novo Convite
+            <Plus size={18} />
+            Criar Novo Convite
           </button>
         </div>
       ) : (
@@ -68,7 +73,8 @@ function HomePage() {
               onClick={() => navigate('/criar')}
               className="btn btn-success"
             >
-              + Criar Novo Convite
+              <Plus size={18} />
+              Criar Novo Convite
             </button>
           </div>
 
