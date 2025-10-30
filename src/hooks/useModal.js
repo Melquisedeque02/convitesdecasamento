@@ -1,61 +1,23 @@
-// src/hooks/useModal.js
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
-export function useModal() {
-  const [modalState, setModalState] = useState({
-    isOpen: false,
-    title: '',
-    message: '',
-    confirmText: 'Confirmar',
-    cancelText: 'Cancelar',
-    type: 'confirm',
-    onConfirm: null,
-    onCancel: null,
-  });
+export const useModal = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalConfig, setModalConfig] = useState({});
 
-  const openModal = useCallback((config) => {
-    setModalState(prev => ({
-      ...prev,
-      isOpen: true,
-      title: config.title || 'Confirmação',
-      message: config.message || '',
-      confirmText: config.confirmText || 'Confirmar',
-      cancelText: config.cancelText || 'Cancelar',
-      type: config.type || 'confirm',
-      onConfirm: config.onConfirm || null,
-      onCancel: config.onCancel || null,
-    }));
-  }, []);
+  const openModal = (config = {}) => {
+    setModalConfig(config);
+    setIsOpen(true);
+  };
 
-  const closeModal = useCallback(() => {
-    setModalState(prev => ({
-      ...prev,
-      isOpen: false,
-    }));
-  }, []);
-
-  const confirm = useCallback((config) => {
-    return new Promise((resolve) => {
-      openModal({
-        ...config,
-        onConfirm: () => {
-          if (config.onConfirm) config.onConfirm();
-          closeModal();
-          resolve(true);
-        },
-        onCancel: () => {
-          if (config.onCancel) config.onCancel();
-          closeModal();
-          resolve(false);
-        },
-      });
-    });
-  }, [openModal, closeModal]);
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalConfig({});
+  };
 
   return {
-    ...modalState,
+    isOpen,
+    ...modalConfig,
     openModal,
-    closeModal,
-    confirm,
+    closeModal
   };
-}
+};

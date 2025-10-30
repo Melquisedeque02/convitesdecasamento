@@ -9,7 +9,8 @@ import {
   Info, 
   Mail, 
   Moon, 
-  User 
+  User,
+  Camera
 } from 'lucide-react';
 import './Navbar.css';
 
@@ -62,7 +63,7 @@ function Navbar() {
               <span className="nav-icon">
                 <Home size={18} />
               </span>
-              <span>Meus Convites</span>
+              <span>Início</span>
             </Link>
           </li>
 
@@ -92,6 +93,20 @@ function Navbar() {
             </Link>
           </li>
 
+          {/* NOVO BOTÃO SCANNER */}
+          <li className="navbar-item">
+            <Link
+              to="/scanner"
+              className={`navbar-link ${isActive('/scanner') ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">
+                <Camera size={18} />
+              </span>
+              <span>Validar Convites</span>
+            </Link>
+          </li>
+
           {/* Separator */}
           <li className="navbar-separator"></li>
 
@@ -103,7 +118,7 @@ function Navbar() {
               onClick={closeMenu}
             >
               <span className="nav-icon">
-                <Plus size={18} />
+                <Info size={18} />
               </span>
               <span>Sobre</span>
             </Link>

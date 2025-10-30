@@ -1,5 +1,5 @@
 // src/components/QRCode/QRCodeGenerator.jsx
-import React, { useState, useEffect } from 'react';
+/*import React, { useState, useEffect } from 'react';
 
 const QRCodeGenerator = ({ data, size = 150, showLoader = true }) => {
   const [qrImage, setQrImage] = useState(null);
@@ -126,4 +126,4 @@ const QRCodeGenerator = ({ data, size = 150, showLoader = true }) => {
   );
 };
 
-export default QRCodeGenerator;
+export default QRCodeGenerator;*/

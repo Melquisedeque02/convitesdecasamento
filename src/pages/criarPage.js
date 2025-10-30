@@ -1,10 +1,11 @@
-// src/pages/criarPage.js
 import React, { useState } from 'react';
 import Modal from '../components/Common/Modal';
 import { useModal } from '../hooks/useModal';
+import QRCodeGenerator from '../components/QRcode/qrcodeGenerator';
+import ApiService from '../services/api';
 import './criarPage.css';
 
-const CreateInvitePage = () => {
+const CriarPage = () => {
   const [formData, setFormData] = useState({
     eventName: '',
     eventDate: '',
@@ -15,8 +16,8 @@ const CreateInvitePage = () => {
     description: '',
   });
 
-  const [invites, setInvites] = useState([]);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [conviteCriado, setConviteCriado] = useState(null);
+  const [loading, setLoading] = useState(false);
   const modal = useModal();
 
   const handleInputChange = (e) => {
@@ -24,26 +25,58 @@ const CreateInvitePage = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCreateInvite = () => {
-    if (!formData.eventName || !formData.eventDate || !formData.eventTime) {
+  const handleCriarConvite = async () => {
+    // Validação básica
+    if (!formData.guestName1.trim()) {
       modal.openModal({
-        title: 'Campos Obrigatórios',
-        message: 'Preencha os campos obrigatórios: Nome do Evento, Data e Hora',
+        title: 'Campo Obrigatório',
+        message: 'O nome do primeiro convidado é obrigatório',
         type: 'danger',
         confirmText: 'OK',
       });
       return;
     }
 
-    const newInvite = {
-      id: Date.now(),
-      ...formData,
-      guests: [formData.guestName1, formData.guestName2].filter(g => g.trim()),
-    };
+    setLoading(true);
 
-    setInvites(prev => [...prev, newInvite]);
-    setShowSuccess(true);
-    
+    try {
+      // Chamar a API do backend
+      const response = await ApiService.criarConvite(formData);
+      
+      setConviteCriado(response.convite);
+      
+      modal.openModal({
+        title: 'Sucesso!',
+        message: 'Convite criado com sucesso! O QR Code foi gerado.',
+        type: 'success',
+        confirmText: 'OK',
+      });
+
+      // Limpar formulário
+      setFormData({
+        eventName: '',
+        eventDate: '',
+        eventTime: '',
+        eventLocation: '',
+        guestName1: '',
+        guestName2: '',
+        description: '',
+      });
+
+    } catch (error) {
+      console.error('Erro ao criar convite:', error);
+      modal.openModal({
+        title: 'Erro',
+        message: 'Erro ao criar convite. Tente novamente.',
+        type: 'danger',
+        confirmText: 'OK',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLimpar = () => {
     setFormData({
       eventName: '',
       eventDate: '',
@@ -53,33 +86,20 @@ const CreateInvitePage = () => {
       guestName2: '',
       description: '',
     });
-
-    setTimeout(() => setShowSuccess(false), 3000);
+    setConviteCriado(null);
   };
 
   return (
     <div className="criar-page">
       <div className="criar-container">
-        {showSuccess && (
-          <div className="success-alert">
-            <span className="alert-icon">✓</span>
-            <span className="alert-text">Convite criado com sucesso!</span>
-            <button 
-              className="alert-close"
-              onClick={() => setShowSuccess(false)}
-            >
-              ×
-            </button>
-          </div>
-        )}
-
         <div className="form-section">
-          <h2 className="form-title">Criar Novo Convite</h2>
+          <h2 className="form-title">Criar Convite</h2>
           <p className="form-subtitle">Preencha os dados do seu evento</p>
           
           <div className="form-card">
+            {/* Campos do Evento */}
             <div className="form-group">
-              <label htmlFor="eventName" className="form-label">Nome do Evento *</label>
+              <label htmlFor="eventName" className="form-label">Nome do Evento</label>
               <input
                 id="eventName"
                 type="text"
@@ -93,7 +113,7 @@ const CreateInvitePage = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="eventDate" className="form-label">Data *</label>
+                <label htmlFor="eventDate" className="form-label">Data</label>
                 <input
                   id="eventDate"
                   type="date"
@@ -104,7 +124,7 @@ const CreateInvitePage = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="eventTime" className="form-label">Hora *</label>
+                <label htmlFor="eventTime" className="form-label">Hora</label>
                 <input
                   id="eventTime"
                   type="time"
@@ -142,20 +162,26 @@ const CreateInvitePage = () => {
               />
             </div>
 
+            {/* Convidados - CAMPOS OBRIGATÓRIOS PARA O BACKEND */}
             <div className="guests-section">
-              <h3 className="guests-title">Convidados (até 2)</h3>
-              <p className="guests-subtitle">Adicione os nomes dos convidados (opcional)</p>
+              <h3 className="guests-title">Convidados</h3>
+              <p className="guests-subtitle">
+                <strong>Primeiro convidado é obrigatório</strong>
+              </p>
               
               <div className="form-group">
-                <label htmlFor="guestName1" className="form-label">Primeiro Convidado</label>
+                <label htmlFor="guestName1" className="form-label">
+                  Primeiro Convidado *
+                </label>
                 <input
                   id="guestName1"
                   type="text"
                   name="guestName1"
                   value={formData.guestName1}
                   onChange={handleInputChange}
-                  placeholder="Nome completo"
+                  placeholder="Nome completo (obrigatório)"
                   className="form-input"
+                  required
                 />
               </div>
 
@@ -167,7 +193,7 @@ const CreateInvitePage = () => {
                   name="guestName2"
                   value={formData.guestName2}
                   onChange={handleInputChange}
-                  placeholder="Nome completo"
+                  placeholder="Nome completo (opcional)"
                   className="form-input"
                 />
               </div>
@@ -175,23 +201,21 @@ const CreateInvitePage = () => {
 
             <div className="form-actions">
               <button
-                onClick={handleCreateInvite}
+                onClick={handleCriarConvite}
                 className="btn btn-primary"
+                disabled={loading || !formData.guestName1.trim()}
               >
-                <span>✓</span>
-                Criar Convite
+                {loading ? 'Criando...' : (
+                  <>
+                    <span>✓</span>
+                    Criar Convite
+                  </>
+                )}
               </button>
               <button
                 className="btn btn-secondary"
-                onClick={() => setFormData({
-                  eventName: '',
-                  eventDate: '',
-                  eventTime: '',
-                  eventLocation: '',
-                  guestName1: '',
-                  guestName2: '',
-                  description: '',
-                })}
+                onClick={handleLimpar}
+                disabled={loading}
               >
                 <span>✕</span>
                 Limpar
@@ -200,27 +224,26 @@ const CreateInvitePage = () => {
           </div>
         </div>
 
-        {invites.length > 0 && (
-          <div className="invites-history">
-            <h3 className="history-title">Convites Criados Nesta Sessão</h3>
-            <div className="invites-list">
-              {invites.map(invite => (
-                <div key={invite.id} className="invite-item">
-                  <div className="invite-item-header">
-                    <h4 className="invite-item-name">{invite.eventName}</h4>
-                    <span className="invite-item-date">
-                      {new Date(invite.eventDate).toLocaleDateString('pt-BR')}
-                    </span>
-                  </div>
-                  <p className="invite-item-time">
-                    <span className="time-icon">🕐</span>
-                    {invite.eventTime}
-                    {invite.guests.length > 0 && (
-                      <span className="guests-badge">{invite.guests.length} convidado{invite.guests.length > 1 ? 's' : ''}</span>
-                    )}
-                  </p>
-                </div>
-              ))}
+        {/* QR Code Gerado */}
+        {conviteCriado && (
+          <div className="qr-section">
+            <h3 className="qr-title">Convite Criado com Sucesso!</h3>
+            <div className="qr-card">
+              <div className="qr-code-container">
+                <QRCodeGenerator 
+                  data={conviteCriado.qr_code} 
+                  size={200} 
+                />
+              </div>
+              <div className="qr-info">
+                <h4>Informações do Convite:</h4>
+                <p><strong>Convidado 1:</strong> {conviteCriado.nome_convidado1}</p>
+                {conviteCriado.nome_convidado2 && (
+                  <p><strong>Convidado 2:</strong> {conviteCriado.nome_convidado2}</p>
+                )}
+                <p><strong>QR Code:</strong> {conviteCriado.qr_code}</p>
+                <p><strong>ID:</strong> {conviteCriado.id}</p>
+              </div>
             </div>
           </div>
         )}
@@ -240,4 +263,4 @@ const CreateInvitePage = () => {
   );
 };
 
-export default CreateInvitePage;
+export default CriarPage;
