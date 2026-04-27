@@ -1,0 +1,132 @@
+.google-map-component {
+  margin: 20px 0;
+}
+
+.map-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.address-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.address-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.address-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn-save-address {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-save-address:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.map-preview {
+  background: #f8f9fa;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.map-header {
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.map-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.map-link-container {
+  padding: 16px;
+  text-align: center;
+}
+
+.btn-navigate {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-bottom: 12px;
+}
+
+.btn-navigate:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.map-address-display {
+  font-size: 13px;
+  color: #495057;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  word-break: break-word;
+}
+
+.map-tip {
+  background: #fff3cd;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.tip-icon {
+  font-size: 18px;
+}
+
+.tip-text {
+  font-size: 13px;
+  color: #856404;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .address-input-group {
+    flex-direction: column;
+  }
+  
+  .map-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}

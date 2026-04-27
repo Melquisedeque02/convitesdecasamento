@@ -12,6 +12,7 @@ import AboutPage from './pages/Sobre';
 import './styles/index.css';
 import ScannerPage from './pages/ScannerPage';
 import ValidatePage from './pages/ValidatePage';
+import VisualizarConvite from './pages/VisualizarConvite';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/sobre" element={<AboutPage />} />
             <Route path="/scanner" element={<ScannerPage />} />
             <Route path="/validate/:qrCode" element={<ValidatePage />} />
+            <Route path="/convite/:qrCode" element={<VisualizarConvite />} />
           </Routes>
         </Layout>
       </Router>

@@ -1,0 +1,275 @@
+/* Modo Editor */
+.cronograma-editor {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.cronograma-header h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.cronograma-header p {
+  font-size: 13px;
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.eventos-list {
+  margin-bottom: 20px;
+}
+
+.evento-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.evento-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.evento-inputs {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.evento-hora-input {
+  width: 80px;
+  padding: 8px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.evento-titulo-input {
+  flex: 2;
+  min-width: 150px;
+  padding: 8px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.evento-desc-input {
+  flex: 3;
+  min-width: 200px;
+  padding: 8px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.btn-remove-evento {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-remove-evento:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}
+
+.add-evento {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px dashed #667eea;
+}
+
+.add-evento h4 {
+  font-size: 14px;
+  color: #667eea;
+  margin-bottom: 12px;
+}
+
+.add-evento-inputs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.add-hora {
+  width: 100px;
+  padding: 10px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.add-titulo {
+  flex: 2;
+  min-width: 150px;
+  padding: 10px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.add-desc {
+  flex: 3;
+  min-width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.btn-add-evento {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-add-evento:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.cronograma-tip {
+  background: #fff3cd;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #856404;
+}
+
+/* Modo Visualização */
+.cronograma-view {
+  margin: 20px 0;
+}
+
+.cronograma-title {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 25px;
+  display: flex;
+  gap: 15px;
+}
+
+.timeline-time {
+  min-width: 70px;
+}
+
+.time-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.timeline-content {
+  position: relative;
+  flex: 1;
+  padding-left: 20px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -8px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  background: #667eea;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #667eea;
+}
+
+.timeline-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.timeline-desc {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .evento-inputs {
+    flex-direction: column;
+  }
+  
+  .evento-hora-input,
+  .evento-titulo-input,
+  .evento-desc-input {
+    width: 100%;
+  }
+  
+  .add-evento-inputs {
+    flex-direction: column;
+  }
+  
+  .add-hora,
+  .add-titulo,
+  .add-desc {
+    width: 100%;
+  }
+  
+  .timeline {
+    padding-left: 20px;
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .timeline-time {
+    min-width: auto;
+  }
+}

@@ -53,7 +53,7 @@ const ConvitesPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">🎉 Digital Invites</h1>
+          <h1 className="text-4xl font-bold text-gray-800 mb-2"> Digital Invites</h1>
           <p className="text-gray-600">Crie e gerencie seus convites digitais com QR Code</p>
         </div>
 
@@ -346,17 +346,17 @@ const PreviewPage = ({ invites, onBack }) => {
         }}
       >
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-2">✨ {invite.eventName} ✨</h1>
+          <h1 className="text-4xl font-bold mb-2"> {invite.eventName} ✨</h1>
           <p className="text-lg opacity-90">{invite.description}</p>
         </div>
 
         <div className="bg-white bg-opacity-20 rounded-lg p-6 backdrop-blur-sm space-y-2">
           <p className="text-xl">
-            <strong>📅 Data:</strong> {new Date(invite.eventDate).toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            <strong> Data:</strong> {new Date(invite.eventDate).toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
-          <p className="text-xl"><strong>🕐 Hora:</strong> {invite.eventTime}</p>
-          {invite.eventLocation && <p className="text-xl"><strong>📍 Local:</strong> {invite.eventLocation}</p>}
-          {invite.guests.length > 0 && <p className="text-xl"><strong>👥 Convidado(s):</strong> {invite.guests.join(' & ')}</p>}
+          <p className="text-xl"><strong> Hora:</strong> {invite.eventTime}</p>
+          {invite.eventLocation && <p className="text-xl"><strong> Local:</strong> {invite.eventLocation}</p>}
+          {invite.guests.length > 0 && <p className="text-xl"><strong> Convidado(s):</strong> {invite.guests.join(' & ')}</p>}
         </div>
 
         <div className="flex justify-center">
@@ -371,7 +371,7 @@ const PreviewPage = ({ invites, onBack }) => {
           onClick={handleDownload}
           className="flex-1 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition font-semibold text-lg"
         >
-          ⬇️ Download do Convite
+          ⬇ Download do Convite
         </button>
         <button
           onClick={onBack}
