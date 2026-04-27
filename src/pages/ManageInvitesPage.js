@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  Users, 
+  Calendar, 
+  Lock, 
+  Search, 
+  Eye, 
+  CheckCircle, 
+  Trash2, 
+  RefreshCw,
+  BarChart3,
+  QrCode,
+  Clock,
+  MapPin,
+  UserPlus
+} from 'lucide-react';
 import ApiService from '../services/api';
 import QRCodeGenerator from '../components/QRcode/QRCodeGenerator';
+import ConviteDetalhes from '../components/ConviteDetalhes/ConviteDetalhes';
 import './ManageInvitesPage.css';
 
 const ManageInvitesPage = () => {
@@ -12,6 +28,7 @@ const ManageInvitesPage = () => {
   const [conviteSelecionado, setConviteSelecionado] = useState(null);
   const [showDetalhes, setShowDetalhes] = useState(false);
   const [carregandoDetalhes, setCarregandoDetalhes] = useState(false);
+  const [baixando, setBaixando] = useState(null);
 
   useEffect(() => {
     carregarConvites();
@@ -32,16 +49,14 @@ const ManageInvitesPage = () => {
   };
 
   const handleVerDetalhes = async (id) => {
-    console.log('🔍 Clicou em Ver Detalhes, ID:', id);
     setCarregandoDetalhes(true);
     
     try {
       const convite = await ApiService.buscarConvitePorId(id);
-      console.log(' Convite carregado:', convite);
       setConviteSelecionado(convite);
       setShowDetalhes(true);
     } catch (error) {
-      console.error(' Erro ao buscar detalhes:', error);
+      console.error('Erro ao buscar detalhes:', error);
       alert('Erro ao carregar detalhes do convite');
     } finally {
       setCarregandoDetalhes(false);
@@ -51,6 +66,51 @@ const ManageInvitesPage = () => {
   const handleFecharDetalhes = () => {
     setShowDetalhes(false);
     setConviteSelecionado(null);
+  };
+
+  const handleDownloadPDF = async (convite) => {
+    setBaixando(convite.id);
+    try {
+      const { default: jsPDF } = await import('jspdf');
+      const pdf = new jsPDF();
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      
+      pdf.setFontSize(20);
+      pdf.setTextColor(201, 168, 124);
+      pdf.text('QR INVITE', pageWidth / 2, 30, { align: 'center' });
+      
+      pdf.setFontSize(14);
+      pdf.setTextColor(74, 55, 40);
+      pdf.text(`Convidado: ${convite.nome_convidado1}`, 20, 60);
+      
+      if (convite.nome_convidado2) {
+        pdf.text(`Acompanhante: ${convite.nome_convidado2}`, 20, 75);
+      }
+      
+      if (convite.nome_evento) {
+        pdf.text(`Evento: ${convite.nome_evento}`, 20, 90);
+      }
+      
+      pdf.text(`Código: ${convite.qr_code}`, 20, 105);
+      
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${convite.qr_code}&format=png&margin=10`;
+      
+      try {
+        const qrSize = 80;
+        const qrX = (pageWidth - qrSize) / 2;
+        pdf.addImage(qrUrl, 'PNG', qrX, 120, qrSize, qrSize);
+      } catch (error) {
+        console.warn('Erro ao adicionar QR Code no PDF');
+      }
+      
+      pdf.save(`convite_${convite.nome_convidado1.replace(/\s+/g, '_')}.pdf`);
+      
+    } catch (error) {
+      console.error('Erro ao baixar PDF:', error);
+      alert('Erro ao baixar PDF');
+    } finally {
+      setBaixando(null);
+    }
   };
 
   const handleUtilizar = async (qrCode, nome) => {
@@ -121,28 +181,36 @@ const ManageInvitesPage = () => {
         {/* Estatísticas */}
         <div className="stats-grid">
           <div className="stat-card">
-            <div className="stat-icon total"></div>
+            <div className="stat-icon total">
+              <Users size={24} />
+            </div>
             <div className="stat-info">
               <span className="stat-value">{estatisticas.total}</span>
               <span className="stat-label">Total</span>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon valid"></div>
+            <div className="stat-icon valid">
+              <CheckCircle size={24} />
+            </div>
             <div className="stat-info">
               <span className="stat-value">{estatisticas.validos}</span>
               <span className="stat-label">Válidos</span>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon used"></div>
+            <div className="stat-icon used">
+              <Lock size={24} />
+            </div>
             <div className="stat-info">
               <span className="stat-value">{estatisticas.utilizados}</span>
               <span className="stat-label">Utilizados</span>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon found"></div>
+            <div className="stat-icon found">
+              <BarChart3 size={24} />
+            </div>
             <div className="stat-info">
               <span className="stat-value">{convitesFiltrados.length}</span>
               <span className="stat-label">Filtrados</span>
@@ -153,7 +221,7 @@ const ManageInvitesPage = () => {
         {/* Barra de busca e filtros */}
         <div className="search-filters">
           <div className="search-bar">
-            <span className="search-icon"></span>
+            <Search size={18} className="search-icon" />
             <input
               type="text"
               placeholder="Buscar por nome ou código..."
@@ -181,7 +249,9 @@ const ManageInvitesPage = () => {
         {/* Lista de convites */}
         {convitesFiltrados.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon"></div>
+            <div className="empty-icon">
+              <Users size={48} />
+            </div>
             <h3>Nenhum convite encontrado</h3>
             <p>{searchTerm ? 'Tente outro termo de busca' : 'Comece criando seu primeiro convite'}</p>
           </div>
@@ -225,21 +295,24 @@ const ManageInvitesPage = () => {
                     className="btn-action btn-detalhes"
                     disabled={carregandoDetalhes}
                   >
-                    {carregandoDetalhes ? ' Carregando...' : ' Ver Detalhes'}
+                    <Eye size={14} />
+                    {carregandoDetalhes ? 'Carregando...' : 'Ver Detalhes'}
                   </button>
                   {convite.utilizado === 0 && (
                     <button
                       onClick={() => handleUtilizar(convite.qr_code, convite.nome_convidado1)}
                       className="btn-action btn-validar"
                     >
-                      ✓ Utilizar
+                      <CheckCircle size={14} />
+                      Utilizar
                     </button>
                   )}
                   <button
                     onClick={() => handleDeletar(convite.id, convite.nome_convidado1)}
                     className="btn-action btn-deletar"
                   >
-                     Deletar
+                    <Trash2 size={14} />
+                    Deletar
                   </button>
                 </div>
               </div>
@@ -249,78 +322,19 @@ const ManageInvitesPage = () => {
 
         <div className="refresh-container">
           <button onClick={carregarConvites} className="btn-refresh">
-             Atualizar lista
+            <RefreshCw size={16} />
+            Atualizar lista
           </button>
         </div>
       </div>
 
-      {/* Modal de Detalhes - Versão Simplificada para Teste */}
+      {/* Modal de Detalhes - Usando o componente separado */}
       {showDetalhes && conviteSelecionado && (
-        <div className="modal-overlay" onClick={handleFecharDetalhes}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={handleFecharDetalhes}>✕</button>
-            
-            <div className="modal-header">
-              <h2>Detalhes do Convite</h2>
-              <div className={`status-badge ${conviteSelecionado.utilizado === 1 ? 'status-used' : 'status-valid'}`}>
-                {conviteSelecionado.utilizado === 1 ? 'Utilizado' : 'Válido'}
-              </div>
-            </div>
-
-            <div className="modal-body">
-              {/* Convidados */}
-              <div className="detalhes-section">
-                <h3>Convidados</h3>
-                <p><strong>Principal:</strong> {conviteSelecionado.nome_convidado1}</p>
-                {conviteSelecionado.nome_convidado2 && (
-                  <p><strong>Acompanhante:</strong> {conviteSelecionado.nome_convidado2}</p>
-                )}
-              </div>
-
-              {/* Evento */}
-              {conviteSelecionado.nome_evento && (
-                <div className="detalhes-section">
-                  <h3>Evento</h3>
-                  <p><strong>Nome:</strong> {conviteSelecionado.nome_evento}</p>
-                  {conviteSelecionado.data_evento && (
-                    <p><strong>Data:</strong> {new Date(conviteSelecionado.data_evento).toLocaleDateString('pt-BR')}</p>
-                  )}
-                  {conviteSelecionado.hora_evento && (
-                    <p><strong>Hora:</strong> {conviteSelecionado.hora_evento}</p>
-                  )}
-                </div>
-              )}
-
-              {/* Local */}
-              {conviteSelecionado.endereco && (
-                <div className="detalhes-section">
-                  <h3>Local</h3>
-                  <p>{conviteSelecionado.endereco}</p>
-                </div>
-              )}
-
-              {/* QR Code */}
-              <div className="detalhes-section qr-section-modal">
-                <h3>QR Code de Validação</h3>
-                <QRCodeGenerator data={conviteSelecionado.qr_code} size={120} />
-                <p className="qr-code-text">{conviteSelecionado.qr_code}</p>
-              </div>
-
-              {/* Informações adicionais */}
-              <div className="detalhes-section">
-                <h3>Informações</h3>
-                <p><strong>ID:</strong> #{conviteSelecionado.id}</p>
-                <p><strong>Criado em:</strong> {new Date(conviteSelecionado.data_criacao).toLocaleDateString('pt-BR')}</p>
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <button onClick={handleFecharDetalhes} className="btn btn-secondary">
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConviteDetalhes
+          convite={conviteSelecionado}
+          onClose={handleFecharDetalhes}
+          onDownload={handleDownloadPDF}
+        />
       )}
     </div>
   );

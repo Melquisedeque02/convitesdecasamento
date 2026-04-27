@@ -1,4 +1,5 @@
 import React from 'react';
+import { X, User, Calendar, MapPin, Clock, QrCode, Info, CheckCircle, XCircle } from 'lucide-react';
 import QRCodeGenerator from '../QRcode/QRCodeGenerator';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import Cronograma from '../Cronograma/Cronograma';
@@ -23,37 +24,68 @@ const ConviteDetalhes = ({ convite, onClose, onDownload }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}>✕</button>
+        <button className="modal-close" onClick={onClose}>
+          <X size={20} />
+        </button>
         
         <div className="modal-header">
-          <h2> Detalhes do Convite</h2>
+          <h2>Detalhes do Convite</h2>
           <div className={`status-badge ${convite.utilizado === 1 ? 'status-used' : 'status-valid'}`}>
-            {convite.utilizado === 1 ? 'Utilizado' : 'Válido'}
+            {convite.utilizado === 1 ? (
+              <><XCircle size={14} /> Utilizado</>
+            ) : (
+              <><CheckCircle size={14} /> Válido</>
+            )}
           </div>
         </div>
 
         <div className="modal-body">
           {/* Convidados */}
           <div className="detalhes-section">
-            <h3> Convidados</h3>
-            <p><strong>Principal:</strong> {convite.nome_convidado1}</p>
-            {convite.nome_convidado2 && <p><strong>Acompanhante:</strong> {convite.nome_convidado2}</p>}
+            <h3><User size={18} /> Convidados</h3>
+            <div className="info-grid">
+              <div className="info-item">
+                <span className="info-label">Principal</span>
+                <span className="info-value">{convite.nome_convidado1}</span>
+              </div>
+              {convite.nome_convidado2 && (
+                <div className="info-item">
+                  <span className="info-label">Acompanhante</span>
+                  <span className="info-value">{convite.nome_convidado2}</span>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Evento */}
           {convite.nome_evento && (
             <div className="detalhes-section">
-              <h3>🎊 Evento</h3>
-              <p><strong>Nome:</strong> {convite.nome_evento}</p>
-              {convite.data_evento && <p><strong>Data:</strong> {new Date(convite.data_evento).toLocaleDateString('pt-BR')}</p>}
-              {convite.hora_evento && <p><strong>Hora:</strong> {convite.hora_evento}</p>}
+              <h3><Calendar size={18} /> Evento</h3>
+              <div className="info-grid">
+                <div className="info-item">
+                  <span className="info-label">Nome</span>
+                  <span className="info-value">{convite.nome_evento}</span>
+                </div>
+                {convite.data_evento && (
+                  <div className="info-item">
+                    <span className="info-label">Data</span>
+                    <span className="info-value">{new Date(convite.data_evento).toLocaleDateString('pt-BR')}</span>
+                  </div>
+                )}
+                {convite.hora_evento && (
+                  <div className="info-item">
+                    <span className="info-label">Hora</span>
+                    <span className="info-value">{convite.hora_evento}</span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
           {/* Local */}
           {convite.endereco && (
             <div className="detalhes-section">
-              <h3> Local do Evento</h3>
+              <h3><MapPin size={18} /> Local do Evento</h3>
               <GoogleMap address={convite.endereco} locationName={convite.nome_evento} />
             </div>
           )}
@@ -61,6 +93,7 @@ const ConviteDetalhes = ({ convite, onClose, onDownload }) => {
           {/* Cronograma */}
           {cronogramaData && cronogramaData.length > 0 && (
             <div className="detalhes-section">
+              <h3><Clock size={18} /> Cronograma</h3>
               <Cronograma eventos={cronogramaData} isViewMode={true} />
             </div>
           )}
@@ -74,23 +107,41 @@ const ConviteDetalhes = ({ convite, onClose, onDownload }) => {
 
           {/* QR Code */}
           <div className="detalhes-section qr-section-modal">
-            <h3> QR Code de Validação</h3>
-            <QRCodeGenerator data={convite.qr_code} size={120} />
-            <p className="qr-code-text">{convite.qr_code}</p>
-            <p className="qr-info-text">Apresente este QR Code na entrada do evento</p>
+            <h3><QrCode size={18} /> QR Code de Validação</h3>
+            <div className="qr-container">
+              <QRCodeGenerator data={convite.qr_code} size={120} />
+              <p className="qr-code-text">{convite.qr_code}</p>
+              <p className="qr-info-text">Apresente este código na entrada do evento</p>
+            </div>
           </div>
 
-          {/* Informações */}
+          {/* Informações Adicionais */}
           <div className="detalhes-section">
-            <h3>ℹ Informações</h3>
-            <p><strong>ID do Convite:</strong> #{convite.id}</p>
-            <p><strong>Criado em:</strong> {new Date(convite.data_criacao).toLocaleDateString('pt-BR')} às {new Date(convite.data_criacao).toLocaleTimeString('pt-BR')}</p>
+            <h3><Info size={18} /> Informações</h3>
+            <div className="info-grid">
+              <div className="info-item">
+                <span className="info-label">ID do Convite</span>
+                <span className="info-value">#{convite.id}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Criado em</span>
+                <span className="info-value">{new Date(convite.data_criacao).toLocaleDateString('pt-BR')}</span>
+              </div>
+              <div className="info-item">
+                <span className="info-label">Horário</span>
+                <span className="info-value">{new Date(convite.data_criacao).toLocaleTimeString('pt-BR')}</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="modal-footer">
-          <button onClick={handleDownload} className="btn btn-primary"> Baixar Convite (PDF)</button>
-          <button onClick={onClose} className="btn btn-secondary">Fechar</button>
+          <button onClick={handleDownload} className="btn btn-primary">
+            Baixar Convite (PDF)
+          </button>
+          <button onClick={onClose} className="btn btn-secondary">
+            Fechar
+          </button>
         </div>
       </div>
     </div>

@@ -32,14 +32,14 @@ const QRCodeGenerator = ({ data, size = 120 }) => {
           color: '#374151',
           fontSize: '0.9rem'
         }}>
-          <strong>🔗 Endereço de Validação:</strong>
+          <strong> Endereço de Validação:</strong>
         </p>
         
         <code 
           className="link-url"
           onClick={() => {
             navigator.clipboard.writeText(validationLink);
-            alert('✅ Endereço copiado para a área de transferência!');
+            alert(' Endereço copiado para a área de transferência!');
           }}
           style={{ 
             cursor: 'pointer',
@@ -73,7 +73,7 @@ const QRCodeGenerator = ({ data, size = 120 }) => {
           margin: '0.5rem 0',
           textAlign: 'center'
         }}>
-          <strong>📱 Como usar:</strong> Escaneie com qualquer app de QR Code
+          <strong> Como usar:</strong> Escaneie com qualquer app de QR Code
         </p>
         
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -101,14 +101,14 @@ const QRCodeGenerator = ({ data, size = 120 }) => {
               e.target.style.transform = 'translateY(0)';
             }}
           >
-            🔗 Abrir Validação
+            Abrir Validação
           </button>
           
           <button 
             className="btn-copy-link"
             onClick={() => {
               navigator.clipboard.writeText(validationLink);
-              alert('✅ Endereço copiado: ' + validationLink);
+              alert(' Endereço copiado: ' + validationLink);
             }}
             style={{
               background: '#10b981',
@@ -131,7 +131,7 @@ const QRCodeGenerator = ({ data, size = 120 }) => {
               e.target.style.transform = 'translateY(0)';
             }}
           >
-            📋 Copiar Endereço
+             Copiar Endereço
           </button>
         </div>
         
@@ -142,7 +142,7 @@ const QRCodeGenerator = ({ data, size = 120 }) => {
           margin: '0.75rem 0 0 0',
           fontStyle: 'italic'
         }}>
-          ⚡ QR Code gera: "192.168.18.5:3000/validate/..."
+           QR Code gera: "192.168.18.5:3000/validate/..."
         </p>
       </div>
     </div>

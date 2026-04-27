@@ -1,16 +1,13 @@
 // src/components/Layout/Navbar.jsx
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  Sparkles, 
-  Home, 
-  Plus, 
-  ClipboardList, 
-  Info, 
-  Mail, 
-  Moon, 
-  User,
-  Camera
+import {
+  Home,
+  Plus,
+  ClipboardList,
+  Info,
+  Camera,
+  CalendarCheck
 } from 'lucide-react';
 import './Navbar.css';
 
@@ -18,30 +15,22 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const closeMenu  = () => setIsOpen(false);
 
-  const closeMenu = () => {
-    setIsOpen(false);
-  };
-
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        {/* Logo/Brand */}
-        <Link to="/" className="navbar-logo">
-          <span className="logo-icon">
-            <Sparkles size={24} />
-          </span>
+
+        {/* Logo */}
+        <Link to="/" className="navbar-logo" onClick={closeMenu}>
+          <span className="logo-icon">✦</span>
           <span className="logo-text">Digital Invites</span>
         </Link>
 
-        {/* Hamburger Menu */}
+        {/* Hamburger */}
         <button
           className={`hamburger ${isOpen ? 'active' : ''}`}
           onClick={toggleMenu}
@@ -54,104 +43,74 @@ function Navbar() {
 
         {/* Navigation Menu */}
         <ul className={`navbar-menu ${isOpen ? 'active' : ''}`}>
+
+          {/* Meus Convites — outlined pill */}
           <li className="navbar-item">
             <Link
               to="/"
-              className={`navbar-link ${isActive('/') ? 'active' : ''}`}
+              className={`navbar-link outlined-btn ${isActive('/') ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              <span className="nav-icon">
-                <Home size={18} />
-              </span>
-              <span>Início</span>
+              <span className="nav-icon"><Home size={15} /></span>
+              Meus Convites
             </Link>
           </li>
 
+          {/* Criar Convite — CTA green pill */}
           <li className="navbar-item">
             <Link
               to="/criar"
-              className={`navbar-link ${isActive('/criar') ? 'active' : ''}`}
+              className={`navbar-link cta-btn ${isActive('/criar') ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              <span className="nav-icon">
-                <Plus size={18} />
-              </span>
-              <span>Criar Convite</span>
-            </Link>
-          </li>
-
-          <li className="navbar-item">
-            <Link
-              to="/gerenciar"
-              className={`navbar-link ${isActive('/gerenciar') ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              <span className="nav-icon">
-                <ClipboardList size={18} />
-              </span>
-              <span>Gerenciar</span>
-            </Link>
-          </li>
-
-          {/* NOVO BOTÃO SCANNER */}
-          <li className="navbar-item">
-            <Link
-              to="/scanner"
-              className={`navbar-link ${isActive('/scanner') ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              <span className="nav-icon">
-                <Camera size={18} />
-              </span>
-              <span>Validar Convites</span>
+              <span className="nav-icon"><Plus size={15} /></span>
+              Criar Convite
             </Link>
           </li>
 
           {/* Separator */}
           <li className="navbar-separator"></li>
 
-          {/* About Section */}
+          {/* Gerenciar */}
+          <li className="navbar-item">
+            <Link
+              to="/gerenciar"
+              className={`navbar-link ${isActive('/gerenciar') ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon"><ClipboardList size={15} /></span>
+              Gerenciar
+            </Link>
+          </li>
+
+          {/* Validar Convites */}
+          <li className="navbar-item">
+            <Link
+              to="/scanner"
+              className={`navbar-link ${isActive('/scanner') ? 'active' : ''}`}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon"><Camera size={15} /></span>
+              Validar Convites
+            </Link>
+          </li>
+
+          {/* Sobre */}
           <li className="navbar-item">
             <Link
               to="/sobre"
               className={`navbar-link ${isActive('/sobre') ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              <span className="nav-icon">
-                <Info size={18} />
-              </span>
-              <span>Sobre</span>
+              <span className="nav-icon"><Info size={15} /></span>
+              Sobre
             </Link>
           </li>
 
-          <li className="navbar-item">
-            <a
-              href="#contato"
-              className="navbar-link"
-              onClick={closeMenu}
-            >
-              <span className="nav-icon">
-                <Mail size={18} />
-              </span>
-              <span>Contato</span>
-            </a>
-          </li>
         </ul>
-
-        {/* Right Section */}
-        <div className="navbar-right">
-          <button className="theme-toggle" aria-label="Toggle theme">
-            <Moon size={18} />
-          </button>
-          <button className="user-button">
-            <span className="user-icon">
-              <User size={18} />
-            </span>
-          </button>
-        </div>
       </div>
 
-      {/* Mobile Overlay */}
+      {/* Mobile overlay */}
       {isOpen && (
         <div className="navbar-overlay" onClick={closeMenu}></div>
       )}
