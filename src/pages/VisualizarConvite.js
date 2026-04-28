@@ -4,6 +4,8 @@ import ApiService from '../services/api';
 import QRCodeGenerator from '../components/QRcode/QRCodeGenerator';
 import GoogleMap from '../components/GoogleMap/GoogleMap';
 import Cronograma from '../components/Cronograma/Cronograma';
+import DeclaracaoNoivos from '../components/DeclaracaoNoivos/DeclaracaoNoivos';
+import SugestoesPresentes from '../components/SugestoesPresentes/SugestoesPresentes';
 import './VisualizarConvite.css';
 
 const VisualizarConvite = () => {
@@ -43,7 +45,7 @@ const VisualizarConvite = () => {
     return (
       <div className="visualizar-page">
         <div className="error-container">
-          <div className="error-icon">⚠️</div>
+          <div className="error-icon"></div>
           <h2>Convite Inválido</h2>
           <p>{erro}</p>
         </div>
@@ -51,21 +53,29 @@ const VisualizarConvite = () => {
     );
   }
 
-  // Parser do cronograma se existir
+  // Parser do cronograma
   let cronogramaData = null;
   if (convite?.cronograma) {
-    try {
-      cronogramaData = JSON.parse(convite.cronograma);
-    } catch (e) {
-      console.error('Erro ao parsear cronograma:', e);
-    }
+    try { cronogramaData = JSON.parse(convite.cronograma); } catch (e) { console.error(e); }
+  }
+
+  // Parser da declaração
+  let declaracaoData = null;
+  if (convite?.declaracao) {
+    try { declaracaoData = JSON.parse(convite.declaracao); } catch (e) { console.error(e); }
+  }
+
+  // Parser dos presentes
+  let presentesData = null;
+  if (convite?.presentes) {
+    try { presentesData = JSON.parse(convite.presentes); } catch (e) { console.error(e); }
   }
 
   return (
     <div className="visualizar-page">
       <div className="visualizar-container">
         <div className="invite-header">
-          <h1>🎊 Convite Digital</h1>
+          <h1>Convite Digital</h1>
           <div className="invite-badge">Válido</div>
         </div>
 
@@ -114,6 +124,20 @@ const VisualizarConvite = () => {
             </div>
           )}
 
+          {/* Declaração dos Noivos */}
+          {declaracaoData && declaracaoData.mensagem && declaracaoData.mensagem.trim() !== '' && (
+            <div className="declaracao-section">
+              <DeclaracaoNoivos declaracao={declaracaoData} isViewMode={true} />
+            </div>
+          )}
+
+          {/* Sugestões de Presentes */}
+          {presentesData && presentesData.length > 0 && (
+            <div className="presentes-section">
+              <SugestoesPresentes presentes={presentesData} isViewMode={true} />
+            </div>
+          )}
+
           {/* QR Code de Validação */}
           <div className="qr-section">
             <h2>QR Code de Validação</h2>
@@ -127,7 +151,7 @@ const VisualizarConvite = () => {
 
         <div className="invite-footer">
           <p>Sistema de Convites Digitais</p>
-          <p className="footer-small">QR Invite - Convite digital com tecnologia de validação</p>
+          <p className="footer-small">Digital Invites - Convite digital com tecnologia de validação</p>
         </div>
       </div>
     </div>

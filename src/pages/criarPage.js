@@ -3,6 +3,8 @@ import QRCodeGenerator from '../components/QRcode/QRCodeGenerator';
 import GoogleMap from '../components/GoogleMap/GoogleMap';
 import Cronograma from '../components/Cronograma/Cronograma';
 import ManualConvidado from '../components/ManualConvidado/ManualConvidado';
+import DeclaracaoNoivos from '../components/DeclaracaoNoivos/DeclaracaoNoivos';
+import SugestoesPresentes from '../components/SugestoesPresentes/SugestoesPresentes';
 import ApiService from '../services/api';
 import './criarPage.css';
 
@@ -26,6 +28,13 @@ const CriarPage = () => {
     alergias: '',
     observacoes: ''
   });
+  const [declaracaoData, setDeclaracaoData] = useState({
+    titulo: '',
+    mensagem: '',
+    frase: '',
+    citacao: ''
+  });
+  const [presentesData, setPresentesData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [conviteCriado, setConviteCriado] = useState(null);
   const [erro, setErro] = useState('');
@@ -49,6 +58,14 @@ const CriarPage = () => {
     setManualData(manual);
   };
 
+  const handleDeclaracaoChange = (declaracao) => {
+    setDeclaracaoData(declaracao);
+  };
+
+  const handlePresentesChange = (presentes) => {
+    setPresentesData(presentes);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -69,7 +86,9 @@ const CriarPage = () => {
         data_evento: formData.eventDate,
         hora_evento: formData.eventTime,
         cronograma: cronogramaEventos.length > 0 ? JSON.stringify(cronogramaEventos) : null,
-        manual: JSON.stringify(manualData)
+        manual: JSON.stringify(manualData),
+        declaracao: JSON.stringify(declaracaoData),
+        presentes: presentesData.length > 0 ? JSON.stringify(presentesData) : null
       });
       
       setConviteCriado(response.convite);
@@ -93,6 +112,13 @@ const CriarPage = () => {
         alergias: '',
         observacoes: ''
       });
+      setDeclaracaoData({
+        titulo: '',
+        mensagem: '',
+        frase: '',
+        citacao: ''
+      });
+      setPresentesData([]);
       
     } catch (error) {
       setErro('Erro ao criar convite. Verifique se o backend está rodando.');
@@ -174,7 +200,7 @@ const CriarPage = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Nome do Convidado 1 </label>
+              <label>Nome do Convidado 1</label>
               <input
                 type="text"
                 name="guestName1"
@@ -255,9 +281,19 @@ const CriarPage = () => {
               onManualChange={handleManualChange}
             />
 
+            <DeclaracaoNoivos 
+              declaracao={declaracaoData}
+              onDeclaracaoChange={handleDeclaracaoChange}
+            />
+
+            <SugestoesPresentes 
+              presentes={presentesData}
+              onPresentesChange={handlePresentesChange}
+            />
+
             <div className="form-actions">
               <button type="submit" className="btn btn-primary" disabled={loading}>
-                {loading ? <><span className="spinner-small"></span> Criando...</> : <><span></span> Criar Convite</>}
+                {loading ? <><span className="spinner-small"></span> Criando...</> : <> Criar Convite</>}
               </button>
               <button type="button" className="btn btn-secondary" onClick={() => {
                 setFormData({
@@ -267,8 +303,12 @@ const CriarPage = () => {
                 setManualData({
                   dressCode: '', whatsapp: '', criancas: 'sim', estacionamento: '', alergias: '', observacoes: ''
                 });
+                setDeclaracaoData({
+                  titulo: '', mensagem: '', frase: '', citacao: ''
+                });
+                setPresentesData([]);
               }}>
-                <span></span> Limpar
+                Limpar
               </button>
             </div>
           </form>
@@ -278,7 +318,7 @@ const CriarPage = () => {
           <div className="qr-section">
             <div className="qr-card">
               <div className="qr-header">
-                <h3 className="qr-title"> Convite Criado com Sucesso!</h3>
+                <h3 className="qr-title">Convite Criado com Sucesso!</h3>
                 <p className="qr-subtitle">Seu convite está pronto para ser compartilhado</p>
               </div>
               <div className="qr-code-container">
@@ -291,8 +331,8 @@ const CriarPage = () => {
                 <div className="info-row"><span className="info-label">ID:</span><span className="info-value">#{conviteCriado.id}</span></div>
               </div>
               <div className="qr-actions">
-                <button onClick={downloadQRCode} className="btn btn-outline"><span></span> Baixar QR Code</button>
-                <button onClick={downloadPDF} className="btn btn-primary"><span></span> Baixar Convite (PDF)</button>
+                <button onClick={downloadQRCode} className="btn btn-outline">Baixar QR Code</button>
+                <button onClick={downloadPDF} className="btn btn-primary">Baixar Convite (PDF)</button>
               </div>
             </div>
           </div>

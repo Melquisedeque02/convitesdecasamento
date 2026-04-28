@@ -4,6 +4,8 @@ import QRCodeGenerator from '../QRcode/QRCodeGenerator';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import Cronograma from '../Cronograma/Cronograma';
 import ManualConvidado from '../ManualConvidado/ManualConvidado';
+import DeclaracaoNoivos from '../DeclaracaoNoivos/DeclaracaoNoivos';
+import SugestoesPresentes from '../SugestoesPresentes/SugestoesPresentes';
 import './ConviteDetalhes.css';
 
 const ConviteDetalhes = ({ convite, onClose, onDownload }) => {
@@ -19,7 +21,19 @@ const ConviteDetalhes = ({ convite, onClose, onDownload }) => {
     try { manualData = JSON.parse(convite.manual); } catch (e) { console.error(e); }
   }
 
+  let declaracaoData = null;
+  if (convite.declaracao) {
+    try { declaracaoData = JSON.parse(convite.declaracao); } catch (e) { console.error(e); }
+  }
+
+  let presentesData = null;
+  if (convite.presentes) {
+    try { presentesData = JSON.parse(convite.presentes); } catch (e) { console.error(e); }
+  }
+
   const handleDownload = () => { if (onDownload) onDownload(convite); };
+
+  const hasEndereco = convite.endereco && convite.endereco.trim() !== '';
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -82,11 +96,14 @@ const ConviteDetalhes = ({ convite, onClose, onDownload }) => {
             </div>
           )}
 
-          {/* Local */}
-          {convite.endereco && (
+          {/* Local do Evento */}
+          {hasEndereco && (
             <div className="detalhes-section">
               <h3><MapPin size={18} /> Local do Evento</h3>
-              <GoogleMap address={convite.endereco} locationName={convite.nome_evento} />
+              <GoogleMap 
+                address={convite.endereco} 
+                locationName={convite.nome_evento} 
+              />
             </div>
           )}
 
@@ -102,6 +119,20 @@ const ConviteDetalhes = ({ convite, onClose, onDownload }) => {
           {manualData && (
             <div className="detalhes-section">
               <ManualConvidado manual={manualData} isViewMode={true} />
+            </div>
+          )}
+
+          {/* Declaração dos Noivos */}
+          {declaracaoData && declaracaoData.mensagem && declaracaoData.mensagem.trim() !== '' && (
+            <div className="detalhes-section">
+              <DeclaracaoNoivos declaracao={declaracaoData} isViewMode={true} />
+            </div>
+          )}
+
+          {/* Sugestões de Presentes */}
+          {presentesData && presentesData.length > 0 && (
+            <div className="detalhes-section">
+              <SugestoesPresentes presentes={presentesData} isViewMode={true} />
             </div>
           )}
 

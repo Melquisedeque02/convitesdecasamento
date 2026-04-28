@@ -14,7 +14,9 @@ class ApiService {
           data_evento: conviteData.data_evento || null,
           hora_evento: conviteData.hora_evento || null,
           cronograma: conviteData.cronograma || null,
-          manual: conviteData.manual || null
+          manual: conviteData.manual || null,
+          declaracao: conviteData.declaracao || null,
+          presentes: conviteData.presentes || null
         })
       });
       if (!response.ok) throw new Error('Erro ao criar convite');
